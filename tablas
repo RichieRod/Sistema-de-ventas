@@ -1,0 +1,67 @@
+CREATE SEQUENCE sucursales_id_seq;
+CREATE SEQUENCE vendedores_id_seq;
+CREATE SEQUENCE productos1_id_seq;
+CREATE SEQUENCE ventas_id_seq;
+
+CREATE TABLE sucursales(
+    id_sucursal INT DEFAULT nextval('sucursales_id_seq') NOT NULL,
+    nombre VARCHAR(50) NOT NULL,
+    dirección VARCHAR(255) NOT NULL,
+    ciudad VARCHAR(255) NOT NULL,
+    estado VARCHAR(255) NOT NULL,
+    código_postal VARCHAR(255) NOT NULL
+);
+ALTER TABLE sucursales
+ADD PRIMARY KEY (id_sucursal);
+
+CREATE TABLE vendedores(
+    id_vendedor INT DEFAULT nextval('vendedores_id_seq') PRIMARY KEY NOT NULL,
+    nombre VARCHAR(255) NOT NULL,
+    apellido VARCHAR(255) NOT NULL,
+    correo_electronico VARCHAR(255) NOT NULL,
+    teléfono VARCHAR(255) NOT NULL,
+    fecha_nacimiento DATE NOT NULL,
+    id_sucursal INT REFERENCES sucursales (id_sucursal)
+);
+
+CREATE TABLE productos1(
+    id_productos1 INT DEFAULT nextval('productos1_id_seq') PRIMARY KEY NOT NULL,
+    nombre VARCHAR(255) NOT NULL,
+    descripción VARCHAR(255) NOT NULL,
+    precio DECIMAL(10,2) NOT NULL,
+    marca VARCHAR(255) NOT NULL,
+    presentación VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE ventas(
+    id_venta INT DEFAULT nextval('ventas_id_seq') PRIMARY KEY NOT NULL,
+    fecha DATE,
+    hora TIME,
+    id_sucursal INT REFERENCES sucursales (id_sucursal),
+    id_vendedor INT REFERENCES vendedores (id_vendedor),
+    id_productos1 INT REFERENCES productos1 (id_productos1),
+    cantidad INT,
+    precio_total DECIMAL (10,2)
+);
+
+SELECT *FROM sucursales
+SELECT *FROM vendedores
+SELECT *FROM productos1
+SELECT *FROM ventas
+
+
+-- Insertar datos en la tabla sucursales
+INSERT INTO sucursales (nombre, dirección, ciudad, estado, código_postal)
+VALUES ('Sucursal 1', 'Calle 123, Col. Centro, Cd. de México', 'Cd. de México', 'CDMX', '06000');
+
+-- Insertar datos en la tabla vendedores
+INSERT INTO vendedores (nombre, apellido, correo_electronico, teléfono, fecha_nacimiento, id_sucursal)
+VALUES ('Juan Pérez', 'García', 'juan.perez@example.com', '5555555555', '1990-01-01', 1);
+
+-- Insertar datos en la tabla productos
+INSERT INTO productos1 (nombre, descripción, precio, marca, presentación)
+VALUES ('Ibuprofeno', 'Medicamento para el dolor', 100.00, 'Bayer', 'Tabletas');
+
+-- Insertar datos en la tabla ventas
+INSERT INTO ventas (fecha, hora, id_sucursal, id_vendedor, id_productos1, cantidad, precio_total)
+VALUES ('2023-07-20', '12:00:00', 1, 1, 1, 10, 1000.00);
